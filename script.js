@@ -1,8 +1,8 @@
-const $ = (selector) => document.querySelector(selector); const $$ = (selector) => [...document.querySelectorAll(selector)];
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => [...document.querySelectorAll(selector)];
 
 $("#year").textContent = new Date().getFullYear();
 
-// Added your image URLs directly to the respective courses
 const courses = [
   { id: 1, title: "Image Generation Masterclass", category: "Image Generation", level: "Beginner", duration: "3h 20m", price: "Set price", progress: 68, img: "https://res.cloudinary.com/hvncv4da/image/upload/v1792162894/1.jpg", symbol: "◩", label: "IMAGE CREATION", description: "Learn visual prompting, styles, composition and image workflows." },
   { id: 2, title: "Video Creation from Scratch", category: "Video Creation", level: "Beginner", duration: "4h 10m", price: "Set price", progress: 35, img: "https://res.cloudinary.com/hvncv4da/image/upload/v1792162895/v.jpg", symbol: "▶", label: "VIDEO STUDIO", description: "Plan scenes, write scripts and explore video generation." },
@@ -83,8 +83,9 @@ function navigate(page) {
   const target = $(`#page-${page}`);
   if (!target) return;
 
-  $$(".page").forEach(section => section.classList.remove("active")); target.classList.add("active");    $$
-(".nav-link").forEach(link => {
+  $$(".page").forEach(section => section.classList.remove("active"));
+  target.classList.add("active");
+  $$(".nav-link").forEach(link => {
     link.classList.toggle("active", link.dataset.page === page);
   });
 
@@ -347,7 +348,6 @@ REQUIREMENTS
   showToast("Your structured prompt is ready.");
 });
 
-// Payment Method Toggles
 let currentPaymentMethod = 'card';
 const btnCard = $("#btnCard");
 const btnTransfer = $("#btnTransfer");
@@ -379,7 +379,6 @@ btnTransfer?.addEventListener("click", () => {
   processPaymentBtn.textContent = "I have made the transfer";
 });
 
-// Process Payment / Verify Transfer
 processPaymentBtn?.addEventListener("click", () => {
   let name, email;
   
@@ -408,7 +407,6 @@ processPaymentBtn?.addEventListener("click", () => {
   
   processPaymentBtn.style.opacity = "0.7";
   
-  // Simulate network request
   setTimeout(() => {
     if (currentPaymentMethod === 'card') {
       showToast("Payment Successful! Welcome to TheoNet Academy.");
@@ -420,11 +418,9 @@ processPaymentBtn?.addEventListener("click", () => {
     
     processPaymentBtn.style.background = "var(--green)";
     
-    // Clear inputs
     $("#payName").value = ""; $("#payEmail").value = ""; $("#payCard").value = "";
     $("#transferName").value = ""; $("#transferEmail").value = "";
     
-    // Redirect to dashboard
     setTimeout(() => {
       navigate("dashboard");
       processPaymentBtn.textContent = currentPaymentMethod === 'card' ? "Pay ₦50,000 & Enroll" : "I have made the transfer";
