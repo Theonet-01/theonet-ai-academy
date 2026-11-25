@@ -41,6 +41,12 @@
         <button class="nav-link enroll-link" data-page="enrollment">💳 Checkout &amp; Payment</button>
       </nav>
 
+      <div class="side-label account-nav-label" id="accountNavLabel" hidden>MY ACCOUNT</div>
+      <nav class="nav" aria-label="Account Navigation">
+        <button class="nav-link" id="studentNav" data-page="student" hidden>👤 Student Dashboard</button>
+        <button class="nav-link" id="adminNav" data-page="admin" hidden>⚙️ Admin Dashboard</button>
+      </nav>
+
       <div class="sidebar-bottom">
         <div class="help-card">
           <b>Direct Support</b>
@@ -60,7 +66,8 @@
       <header class="topbar">
         <button class="icon-btn menu-btn" id="menuBtn" aria-label="Toggle navigation menu">☰</button>
         <div class="breadcrumb">TheoNet Academy / <b id="breadcrumb">Overview</b></div>
-        <div class="top-actions">
+        <div class="top-actions account-actions">
+          <button class="outline-btn" id="accountBtn">Sign in / Create account</button>
           <button class="primary-btn top-cta" data-page="enrollment">Go to Checkout</button>
         </div>
       </header>
@@ -351,6 +358,39 @@
           </div>
         </section>
 
+
+        <!-- STUDENT DASHBOARD -->
+        <section class="page" id="page-student">
+          <div class="page-intro"><h1>Student <span class="highlight-text">Dashboard</span></h1>
+            <p class="muted">Your learning, enrolments and certificates.</p></div>
+          <div class="dashboard-stats" id="studentStats"></div>
+          <div class="panel"><h3>My Enrolments</h3><div id="studentEnrollments" class="table-wrap">Sign in to view your enrolments.</div></div>
+          <div class="panel" style="margin-top:18px"><h3>My Certificates</h3><div id="studentCertificates">Certificates will appear here when issued.</div></div>
+        </section>
+
+        <!-- ADMIN DASHBOARD -->
+        <section class="page" id="page-admin">
+          <div class="page-intro"><h1>Administrator <span class="highlight-text">Dashboard</span></h1>
+            <p class="muted">Manage academy activity. Access is restricted to approved administrators.</p></div>
+          <div class="dashboard-stats" id="adminStats"></div>
+          <div class="panel">
+            <h3>Add a Course</h3>
+            <form id="courseForm" class="admin-course-form">
+              <input class="field" id="courseTitle" placeholder="Course title" required>
+              <input class="field" id="coursePrice" type="number" min="0" placeholder="Price in Naira" required>
+              <input class="field" id="courseImage" type="url" placeholder="Course image URL (optional)">
+              <textarea class="field textarea" id="courseDescription" placeholder="Course description"></textarea>
+              <button class="primary-btn" type="submit">Save Course</button>
+            </form>
+          </div>
+          <div class="panel" style="margin-top:18px">
+            <h3>Course Management</h3><div id="adminCourses">Loading courses...</div>
+          </div>
+          <div class="panel" style="margin-top:18px">
+            <h3>Recent Enrolments</h3><div id="adminEnrollments">Loading enrolments...</div>
+          </div>
+        </section>
+
         <footer class="footer">
           <div class="footer-brand">
             <b>TheoNet Academy</b>
@@ -368,8 +408,34 @@
     </main>
   </div>
 
+
+  <div class="auth-backdrop" id="authBackdrop" hidden>
+    <section class="auth-modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <button class="auth-close" id="authClose" aria-label="Close">×</button>
+      <h2 id="authTitle">Welcome to TheoNet Academy</h2>
+      <p class="muted" id="authDescription">Sign in or create your student account.</p>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="loginTab" type="button">Sign in</button>
+        <button class="auth-tab" id="registerTab" type="button">Create account</button>
+      </div>
+      <form id="authForm">
+        <label class="form-label" for="authName" id="authNameLabel" hidden>Full name</label>
+        <input class="field" id="authName" autocomplete="name" placeholder="Full name" hidden>
+        <label class="form-label" for="authEmail">Email address</label>
+        <input class="field" id="authEmail" type="email" autocomplete="email" placeholder="name@example.com" required>
+        <label class="form-label" for="authPassword">Password</label>
+        <input class="field" id="authPassword" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters" required>
+        <button class="primary-btn full-btn" id="authSubmit" type="submit">Sign in</button>
+      </form>
+      <button class="text-button" id="resetPassword" type="button">Forgot password?</button>
+      <p class="auth-message" id="authMessage" role="status"></p>
+    </section>
+  </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="mobile-overlay" id="mobileOverlay"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

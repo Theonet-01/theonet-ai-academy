@@ -128,20 +128,32 @@ function navigate(page) {
     enrollment: "Checkout & Payment",
     image: "Image Prompt Builder",
     video: "Video Outline Builder",
-    prompts: "Prompt Builder"
+    prompts: "Prompt Builder",
+    student: "Student Dashboard",
+    admin: "Admin Dashboard"
   };
 
   if ($("#breadcrumb")) $("#breadcrumb").textContent = pageTitles[page] || "Overview";
   $("#sidebar")?.classList.remove("open");
   $("#mobileOverlay")?.classList.remove("show");
   window.scrollTo({ top: 0, behavior: "smooth" });
+  window.dispatchEvent(new CustomEvent("theonet:navigate", { detail: page }));
 }
 
 document.addEventListener("click", (event) => {
   const pageButton = event.target.closest("[data-page]");
   if (pageButton) {
     event.preventDefault();
-    navigate(pageButton.dataset.page);
+    const requestedPage = pageButton.dataset.page;
+    if (requestedPage === "student" && !window.theonet?.user) {
+      document.getElementById("authBackdrop").hidden = false;
+      return;
+    }
+    if (requestedPage === "admin" && window.theonet?.profile?.role !== "admin") {
+      showToast("Administrator access is required.");
+      return;
+    }
+    navigate(requestedPage);
   }
 });
 
