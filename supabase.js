@@ -134,6 +134,7 @@
     window.theonet.profile = data;
 
     updateAccountUI();
+    window.dispatchEvent(new CustomEvent("theonet:ready", { detail: { user, profile: data } }));
 
     if (shouldOpenDashboard) {
       openDashboardForRole(data, user);
@@ -146,6 +147,18 @@
     const profile = window.theonet.profile;
     const user = window.theonet.user;
     const signedIn = !!user;
+
+    const welcome = $("welcomeBanner");
+    if (welcome) {
+      if (signedIn) {
+        const displayName = profile?.full_name || user.email?.split("@")[0] || "Student";
+        welcome.hidden = false;
+        welcome.innerHTML = `<strong>Welcome back, ${escapeHtml(displayName)}!</strong><span>Continue learning with TheoNet AI Academy.</span>`;
+      } else {
+        welcome.hidden = true;
+        welcome.textContent = "";
+      }
+    }
 
     if ($("accountBtn")) {
       $("accountBtn").textContent = signedIn
@@ -470,7 +483,7 @@
 
       const { error } = await client.from("courses").insert({
         title: $("courseTitle").value.trim(),
-        price_ngn: Number($("coursePrice").value),
+        price_ngn: 5000,
         image_url: $("courseImage").value.trim() || null,
         description: $("courseDescription").value.trim(),
         is_published: true
@@ -543,6 +556,7 @@
         window.theonet.profile = null;
         lastRoutedUserId = null;
         updateAccountUI();
+        window.dispatchEvent(new CustomEvent("theonet:ready", { detail: { user: null, profile: null } }));
         return;
       }
 
@@ -570,6 +584,7 @@
       }
     } else {
       updateAccountUI();
+      window.dispatchEvent(new CustomEvent("theonet:ready", { detail: { user: null, profile: null } }));
     }
   });
 

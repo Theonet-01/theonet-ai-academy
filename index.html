@@ -54,7 +54,7 @@
           <div class="support-links">
             <a href="https://wa.me/2349162616798" target="_blank" rel="noopener noreferrer">WhatsApp: +234 916 261 6798 →</a>
             <a href="tel:+2349029334903">Call: 0902 933 4903</a>
-            <a href="mailto:tordue01@gmail.com">tordue01@gmail.com</a>
+            <a href="mailto:etordue003@gmail.com">etordue003@gmail.com</a>
             <a href="https://chat.whatsapp.com/FrvA0xKBdN04a5FxqkKdDo?s=cl&p=a&mlu=4&ilr=4" target="_blank" rel="noopener noreferrer">Join WhatsApp Group →</a>
           </div>
         </div>
@@ -75,6 +75,7 @@
       <div class="content">
         <!-- OVERVIEW / HOMEPAGE -->
         <section class="page active" id="page-dashboard">
+          <div id="welcomeBanner" class="welcome-banner" hidden aria-live="polite"></div>
           <div class="hero">
             <div class="hero-copy">
               <span class="hero-tag">THEONET ACADEMY</span>
@@ -90,11 +91,24 @@
             </div>
           </div>
 
+          <!-- FOUNDER -->
+          <section class="founder-section" aria-labelledby="founderHeading">
+            <div class="founder-photo-wrap">
+              <img src="https://res.cloudinary.com/hvncv4da/image/upload/v1789917107/Founder.png" alt="Emmanuel Tordue, Founder of TheoNet AI Academy" loading="lazy">
+            </div>
+            <div class="founder-copy">
+              <span class="founder-kicker">MEET THE FOUNDER</span>
+              <h2 id="founderHeading">Emmanuel Tordue</h2>
+              <p class="founder-role">Founder, TheoNet AI Academy</p>
+              <p>Building practical learning experiences and digital solutions that help people develop useful skills and turn ideas into projects.</p>
+            </div>
+          </section>
+
           <!-- COMPLETE PACKAGE -->
           <div class="section-heading">
             <div>
               <h2>Complete Academy Training Package</h2>
-              <p class="muted">Full access to the courses included in the academy training bundle.</p>
+              <p class="muted">Full access to the published academy courses included in the training bundle.</p>
             </div>
           </div>
           <div class="package-card">
@@ -113,7 +127,7 @@
           <div class="section-heading">
             <div>
               <h2>Individual Courses &amp; Services</h2>
-              <p class="muted">Each item carries its own pricing status—confirm before paying.</p>
+              <p class="muted">Individual courses are ₦5,000 each. Service prices are confirmed separately.</p>
             </div>
           </div>
           <div class="course-grid" id="dashboardItems"></div>
@@ -129,17 +143,17 @@
             <div class="step-card">
               <span class="step-num">01</span>
               <h3>Choose Course or Service</h3>
-              <p>Select the ₦50,000 Complete Package, an individual course with a confirmed price, or request a quote for unpriced services.</p>
+              <p>Select the ₦50,000 Complete Package, an individual course for ₦5,000, or request a quote for services.</p>
             </div>
             <div class="step-card">
               <span class="step-num">02</span>
-              <h3>Check Exact Price</h3>
-              <p>Review the exact Naira total in Checkout. Items marked "Price to be confirmed" cannot be checked out until confirmed via WhatsApp or email.</p>
+              <h3>Pay Securely</h3>
+              <p>Pay for courses and the complete package securely through Paystack. Service orders require a separate quote.</p>
             </div>
             <div class="step-card">
               <span class="step-num">03</span>
-              <h3>Transfer &amp; Verify</h3>
-              <p>Send payment to the verified UBA account and submit your details or receipt on WhatsApp so access or onboarding can be confirmed.</p>
+              <h3>Automatic Verification</h3>
+              <p>After Paystack confirms your payment on the server, your course enrolment is activated in your student dashboard.</p>
             </div>
           </div>
 
@@ -213,9 +227,11 @@
         <section class="page" id="page-courses">
           <div class="page-intro">
             <h1>Explore <span class="highlight-text">Courses</span></h1>
-            <p class="muted">Individual courses and the complete academy bundle.</p>
+            <p class="muted">Individual courses cost ₦5,000 each. Search the published courses below.</p>
           </div>
-          <div class="course-grid" id="allCoursesGrid"></div>
+          <label class="form-label" for="courseSearchInput">Search available courses</label>
+          <input id="courseSearchInput" class="field course-search" type="search" placeholder="Search by course title or description..." autocomplete="off">
+          <div class="course-grid" id="allCoursesGrid"><p class="muted">Loading available courses...</p></div>
         </section>
 
         <!-- SERVICES PAGE -->
@@ -231,7 +247,7 @@
         <section class="page" id="page-enrollment">
           <div class="page-intro">
             <h1>Checkout &amp; <span class="highlight-text">Payment</span></h1>
-            <p class="muted">Confirm the selected item and total amount before transferring funds.</p>
+            <p class="muted">Choose a course or package and complete payment securely with Paystack.</p>
           </div>
 
           <div class="workspace-grid">
@@ -254,40 +270,22 @@
                 <p class="muted">Contact TheoNet directly before transferring for unpriced courses or services:</p>
                 <div class="contact-inline">
                   <a href="https://wa.me/2349162616798" target="_blank" rel="noopener noreferrer" class="outline-btn">WhatsApp: +234 916 261 6798</a>
-                  <a href="mailto:tordue01@gmail.com" class="outline-btn">Email: tordue01@gmail.com</a>
+                  <a href="mailto:etordue003@gmail.com" class="outline-btn">Email: etordue003@gmail.com</a>
                 </div>
               </div>
             </div>
 
-            <div class="panel">
-              <h3>Bank Transfer Details</h3>
-              <p class="muted" style="margin-bottom: 16px;">Use the bank details below only for items with a confirmed price.</p>
-
-              <div class="bank-details-box">
-                <div class="bank-row"><span>Bank Name:</span> <b>UBA</b></div>
-                <div class="bank-row"><span>Account Number:</span> <b class="acct-num">2094637333</b></div>
-                <div class="bank-row"><span>Account Name:</span> <b>Emmanuel Tordue</b></div>
-                <div class="bank-row bank-total">
-                  <span>Total to Pay:</span> <b id="payAmountDisplay">₦50,000</b>
-                </div>
+            <div class="panel payment-panel">
+              <h3>Pay with Paystack</h3>
+              <p class="muted">Your payment is initialized securely on the TheoNet server. Paystack processes the transaction, and the server verifies the amount and transaction reference before activating access.</p>
+              <div class="payment-total">
+                <span>Total to Pay</span>
+                <strong id="payAmountDisplay">₦50,000</strong>
               </div>
-
-              <div style="margin-top: 18px;">
-                <label class="form-label" for="transferName">Payer Name</label>
-                <input type="text" id="transferName" class="field" placeholder="Full name used for transfer">
-
-                <label class="form-label" for="transferEmail">Email Address</label>
-                <input type="email" id="transferEmail" class="field" placeholder="name@example.com">
-
-                <button class="primary-btn full-btn" id="confirmTransferBtn">Confirm Transfer Details</button>
-                <p id="tbcWarning" class="error-text tbc-warning" style="display: none;">
-                  Checkout is disabled for items marked "Price to be confirmed". Message us on WhatsApp or email to confirm pricing first.
-                </p>
-              </div>
-
-              <div class="notice">
-                Access or service scheduling is activated only after payment verification. For fast confirmation, share your transfer receipt via WhatsApp (+234 916 261 6798) or email (tordue01@gmail.com).
-              </div>
+              <button class="primary-btn full-btn" id="paystackPayBtn" type="button">Continue to Paystack</button>
+              <p id="tbcWarning" class="error-text tbc-warning" hidden>Online checkout is available for courses and the complete package. Contact TheoNet for a service quotation.</p>
+              <p class="payment-note">Never send your card PIN, password or OTP to anyone. TheoNet will not ask you to share these details.</p>
+              <div id="paymentStatus" class="payment-status" role="status" aria-live="polite"></div>
             </div>
           </div>
         </section>
@@ -377,7 +375,7 @@
             <h3>Add a Course</h3>
             <form id="courseForm" class="admin-course-form">
               <input class="field" id="courseTitle" placeholder="Course title" required>
-              <input class="field" id="coursePrice" type="number" min="0" placeholder="Price in Naira" required>
+              <div class="fixed-course-price">Individual course price: <strong>₦5,000</strong></div>
               <input class="field" id="courseImage" type="url" placeholder="Course image URL (optional)">
               <textarea class="field textarea" id="courseDescription" placeholder="Course description"></textarea>
               <button class="primary-btn" type="submit">Save Course</button>
@@ -401,7 +399,7 @@
             <span>•</span>
             <a href="tel:+2349029334903">Phone: 0902 933 4903</a>
             <span>•</span>
-            <a href="mailto:tordue01@gmail.com">tordue01@gmail.com</a>
+            <a href="mailto:etordue003@gmail.com">etordue003@gmail.com</a>
           </div>
         </footer>
       </div>

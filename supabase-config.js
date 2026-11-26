@@ -1,7 +1,3 @@
-/*
-  TheoNet Academy Supabase connection
-*/
-
 window.THEONET_SUPABASE_URL =
   "https://pvknrevzfukfmtbpeeze.supabase.co";
 
