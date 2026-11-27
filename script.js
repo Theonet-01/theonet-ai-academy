@@ -4,15 +4,9 @@ const $$ = (selector) => [...document.querySelectorAll(selector)];
 
 if ($("#year")) $("#year").textContent = new Date().getFullYear();
 
-const bundle = {
-  id: "bundle",
-  type: "package",
-  title: "THEONET ACADEMY COMPLETE PACKAGE",
-  price: 50000,
-  img: "https://res.cloudinary.com/hvncv4da/image/upload/v1792162894/1.jpg",
-  desc: "Full access to the published academy courses and structured training resources.",
-  deliverable: "Includes published academy courses and learning materials. Excludes custom agency work and website builds."
-};
+/* =========================================
+   SERVICES
+========================================= */
 
 const services = [
   {
@@ -45,7 +39,7 @@ const services = [
 ];
 
 let courses = [];
-let inventory = [bundle, ...services];
+let inventory = [...services];
 
 const formatPrice = (amount) => new Intl.NumberFormat("en-NG", {
   style: "currency",
@@ -73,16 +67,18 @@ function courseItem(course) {
   };
 }
 
+/* =========================================
+   CATALOGUE DISPLAY
+========================================= */
+
 function renderItemCard(item) {
   const isTBC = item.type === "service";
 
-  const typeText = item.type === "service"
+  const typeText = isTBC
     ? "Creative / Web Service"
-    : item.type === "package"
-      ? "Complete Training Package"
-      : "Training Course";
+    : "Training Course";
 
-  const buttonText = item.type === "service"
+  const buttonText = isTBC
     ? "Request a Quote"
     : "Enroll Now";
 
@@ -107,7 +103,7 @@ function renderItemCard(item) {
 }
 
 function renderCatalog() {
-  inventory = [bundle, ...courses.map(courseItem), ...services];
+  inventory = [...courses.map(courseItem), ...services];
 
   const dashboardItems = [
     ...courses.slice(0, 2).map(courseItem),
@@ -130,17 +126,19 @@ function renderCatalog() {
   if (select) {
     const previousSelection = select.value;
 
-    select.innerHTML = inventory.map(item =>
-      `<option value="${escapeHtml(String(item.id))}">
-        ${escapeHtml(item.title)} — ${item.type === "service" ? "Quote required" : formatPrice(item.price)}
-      </option>`
-    ).join("");
+    select.innerHTML =
+      '<option value="">Select a course or service</option>' +
+      inventory.map(item =>
+        `<option value="${escapeHtml(String(item.id))}">
+          ${escapeHtml(item.title)} — ${item.type === "service" ? "Quote required" : formatPrice(item.price)}
+        </option>`
+      ).join("");
 
     const selectionStillExists = inventory.some(
       item => String(item.id) === previousSelection
     );
 
-    select.value = selectionStillExists ? previousSelection : "bundle";
+    select.value = selectionStillExists ? previousSelection : "";
 
     updateCheckoutUI();
   }
@@ -159,6 +157,10 @@ function renderCourseSearch() {
       : '<p class="muted">No courses match your search.</p>';
   }
 }
+
+/* =========================================
+   LOAD PUBLISHED COURSES
+========================================= */
 
 async function loadPublicCourses() {
   const client = window.theonet?.client;
@@ -201,6 +203,10 @@ if (window.theonet?.client) {
   loadPublicCourses();
 }
 
+/* =========================================
+   WEBSITE NAVIGATION
+========================================= */
+
 function navigate(page) {
   const target = $(`#page-${page}`);
 
@@ -215,7 +221,7 @@ function navigate(page) {
 
   const pageTitles = {
     dashboard: "Overview",
-    courses: "Courses & Bundle",
+    courses: "Courses",
     services: "Hire Services",
     enrollment: "Checkout & Payment",
     image: "Image Prompt Builder",
@@ -274,6 +280,10 @@ $("#mobileOverlay")?.addEventListener("click", () => {
   $("#mobileOverlay")?.classList.remove("show");
 });
 
+/* =========================================
+   CHECKOUT
+========================================= */
+
 window.goToCheckout = function(itemId) {
   navigate("enrollment");
 
@@ -292,14 +302,30 @@ function updateCheckoutUI() {
 
   if (!select) return;
 
-  const item = inventory.find(x => String(x.id) === select.value) || bundle;
+  const item = inventory.find(x => String(x.id) === select.value);
+
+  if (!item) {
+    $("#summaryTitle").textContent = "No item selected";
+    $("#summaryDesc").textContent = "Select an individual course to continue with enrollment.";
+    $("#summaryDeliverable").textContent = "Each published course costs ₦5,000.";
+    $("#summaryPrice").textContent = "₦5,000 per course";
+    $("#payAmountDisplay").textContent = "Select a course";
+    $("#payAmountDisplay").style.color = "var(--red)";
+    $("#paystackPayBtn").disabled = true;
+    $("#paystackPayBtn").textContent = "Select a Course First";
+
+    if ($("#tbcWarning")) {
+      $("#tbcWarning").hidden = true;
+    }
+    return;
+  }
 
   $("#summaryTitle").textContent = item.title;
   $("#summaryDesc").textContent = item.desc;
   $("#summaryDeliverable").textContent = item.deliverable;
 
   const isService = item.type === "service";
-  const amount = isService ? "Quote required" : formatPrice(item.price);
+  const amount = isService ? "Quote required" : formatPrice(5000);
 
   $("#summaryPrice").textContent = amount;
   $("#payAmountDisplay").textContent = amount;
@@ -308,13 +334,15 @@ function updateCheckoutUI() {
     ? "var(--red)"
     : "var(--green)";
 
-  $("#paystackPayBtn").disabled = isService;
+  $("#paystackPayBtn").disabled = isService || item.type !== "course";
 
   $("#paystackPayBtn").textContent = isService
     ? "Contact TheoNet for a Quote"
     : "Continue to Paystack";
 
-  $("#tbcWarning").hidden = !isService;
+  if ($("#tbcWarning")) {
+    $("#tbcWarning").hidden = !isService;
+  }
 }
 
 /* =========================================
@@ -337,10 +365,18 @@ $("#paystackPayBtn")?.addEventListener("click", async () => {
 
   const item = inventory.find(
     x => String(x.id) === $("#checkoutItemSelect")?.value
-  ) || bundle;
+  );
+
+  if (!item) {
+    return showToast("Please select a published course first.");
+  }
 
   if (item.type === "service") {
     return showToast("Please contact TheoNet for a service quotation.");
+  }
+
+  if (item.type !== "course") {
+    return showToast("Only individual course payments are supported.");
   }
 
   const button = $("#paystackPayBtn");
@@ -354,16 +390,10 @@ $("#paystackPayBtn")?.addEventListener("click", async () => {
   }
 
   try {
-    // Use the exact field names expected by the Supabase Edge Function.
-    const body = item.type === "package"
-      ? {
-          item_type: "bundle",
-          course_id: null
-        }
-      : {
-          item_type: "course",
-          course_id: item.id
-        };
+    const body = {
+      item_type: "course",
+      course_id: item.id
+    };
 
     const { data, error } = await client.functions.invoke(
       "initialize-paystack-payment",
@@ -382,7 +412,6 @@ $("#paystackPayBtn")?.addEventListener("click", async () => {
       );
     }
 
-    // Save both values before leaving TheoNet.
     sessionStorage.setItem(
       "theonet_payment_id",
       data.payment_id
@@ -449,7 +478,6 @@ async function verifyPaystackReturn() {
 
   const statusNode = $("#paymentStatus");
 
-  // Wait until the student's Supabase login session is available.
   const client = window.theonet?.client;
   const user = window.theonet?.user;
 
@@ -502,7 +530,6 @@ async function verifyPaystackReturn() {
       );
     }
 
-    // Remove saved details only after successful verification.
     sessionStorage.removeItem("theonet_payment_id");
     sessionStorage.removeItem("theonet_payment_reference");
 
@@ -514,7 +541,7 @@ async function verifyPaystackReturn() {
     cleanPaymentReturnUrl();
 
     showToast(
-      `Payment successful. ${data.courses_activated || 1} course access(es) activated.`
+      "Payment successful. Your course access has been activated."
     );
 
     navigate("student");
@@ -531,7 +558,9 @@ async function verifyPaystackReturn() {
 
     showToast(message);
 
-    // Keep the reference and payment ID so verification can be retried.
+    // Keep the payment reference and ID so verification can be retried.
+    lastVerificationAttempt = "";
+
   } finally {
     paymentVerificationInProgress = false;
   }
@@ -539,7 +568,6 @@ async function verifyPaystackReturn() {
 
 window.addEventListener("theonet:ready", verifyPaystackReturn);
 
-// Also check if authentication was already ready when this file loaded.
 if (window.theonet?.client && window.theonet?.user) {
   verifyPaystackReturn();
 }
